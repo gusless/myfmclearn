@@ -61,12 +61,22 @@ theorem conj_comm :
 
 theorem impl_as_disj_converse :
   (¬ P ∨ Q) → (P → Q)  := by
-  sorry
+  intro h h2
+  cases h with
+  | inr hq =>
+    exact hq
+  | inl hnp =>
+    contradiction
+
 
 theorem disj_as_impl :
   (P ∨ Q) → (¬ P → Q)  := by
-  sorry
-
+  intro h np
+  cases h with
+  | inl hp =>
+    exact False.elim (np hp)
+  | inr hq =>
+    exact hq
 
 ------------------------------------------------
 -- Contrapositive
