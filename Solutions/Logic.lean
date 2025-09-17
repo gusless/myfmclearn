@@ -84,16 +84,22 @@ theorem disj_as_impl :
 
 theorem impl_as_contrapositive :
   (P → Q) → (¬ Q → ¬ P)  := by
-  sorry
+  intro h nq np
+  exact nq (h np)
 
 theorem impl_as_contrapositive_converse :
   (¬ Q → ¬ P) → (P → Q)  := by
-  sorry
+  intro h hp
+  by_cases hq : Q
+  . exact hq
+  . have np := h hq
+    contradiction np hp
 
 theorem contrapositive_law :
   (P → Q) ↔ (¬ Q → ¬ P)  := by
-  sorry
-
+  constructor
+  apply impl_as_contrapositive
+  apply impl_as_contrapositive_converse
 
 ------------------------------------------------
 -- Irrefutability of LEM[P]
