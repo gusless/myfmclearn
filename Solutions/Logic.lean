@@ -365,19 +365,27 @@ theorem impl_refl :
 
 theorem weaken_disj_right :
   P → (P ∨ Q)  := by
-  sorry
+  intro p
+  left
+  exact p
 
 theorem weaken_disj_left :
   Q → (P ∨ Q)  := by
-  sorry
+  intro q
+  right
+  exact q
 
 theorem weaken_conj_right :
   (P ∧ Q) → P  := by
-  sorry
+  intro pq
+  have p := pq.left
+  exact p
 
 theorem weaken_conj_left :
   (P ∧ Q) → Q  := by
-  sorry
+  intro pq
+  have q := pq.right
+  exact q
 
 
 ------------------------------------------------
@@ -386,11 +394,27 @@ theorem weaken_conj_left :
 
 theorem disj_idem :
   (P ∨ P) ↔ P  := by
-  sorry
+  constructor
+  . intro pp
+    cases pp with
+    | inr pr =>
+      exact pr
+    | inl pl  =>
+      exact pl
+  . intro p
+    left
+    exact p
 
 theorem conj_idem :
   (P ∧ P) ↔ P := by
-  sorry
+  constructor
+  . intro pp
+    have pl := pp.left
+    exact pl
+  . intro p
+    constructor
+    . exact p
+    . exact p
 
 
 ------------------------------------------------
@@ -399,11 +423,13 @@ theorem conj_idem :
 
 theorem false_bottom :
   False → P := by
-  sorry
+  intro f
+  exact False.elim
 
 theorem true_top :
   P → True  := by
-  sorry
+  intro p
+  exact True.intro
 
 
 end propositional
