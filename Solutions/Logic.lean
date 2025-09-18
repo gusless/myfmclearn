@@ -250,19 +250,81 @@ theorem demorgan_disj_law :
 
 theorem distr_conj_disj :
   P ∧ (Q ∨ R) → (P ∧ Q) ∨ (P ∧ R)  := by
-  sorry
+  intro pqr
+  have qr := pqr.right
+  have p := pqr.left
+  cases qr with
+  | inr r =>
+    right
+    constructor
+    . exact p
+    . exact r
+  | inl q =>
+    left
+    constructor
+    . exact p
+    . exact q
 
 theorem distr_conj_disj_converse :
   (P ∧ Q) ∨ (P ∧ R) → P ∧ (Q ∨ R)  := by
-  sorry
+  intro pqpr
+  cases pqpr with
+  | inr pr =>
+    constructor
+    . have p := pr.left
+      exact p
+    . have r := pr.right
+      right
+      exact r
+  | inl pq =>
+    constructor
+    . have p := pq.left
+      exact p
+    . have q := pq.right
+      left
+      exact q
 
 theorem distr_disj_conj :
   P ∨ (Q ∧ R) → (P ∨ Q) ∧ (P ∨ R)  := by
-  sorry
+  intro pqr
+  constructor
+  . cases pqr with
+    | inl p =>
+      left
+      exact p
+    | inr qr =>
+      right
+      have q := qr.left
+      exact q
+  . cases pqr with
+    | inl p =>
+      left
+      exact p
+    | inr pr =>
+      right
+      have r := pr.right
+      exact r
+
 
 theorem distr_disj_conj_converse :
   (P ∨ Q) ∧ (P ∨ R) → P ∨ (Q ∧ R)  := by
-  sorry
+  intro pqpr
+  have pq := pqpr.left
+  have pr := pqpr.right
+  cases pq with
+  | inl p =>
+    left
+    exact p
+  | inr q =>
+    cases pr with
+    | inl p =>
+      left
+      exact p
+    | inr r =>
+      right
+      constructor
+      . exact q
+      . exact r
 
 
 ------------------------------------------------
