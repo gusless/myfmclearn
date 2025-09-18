@@ -181,28 +181,68 @@ theorem conj_as_negdisj :
 
 theorem demorgan_disj :
   ¬ (P ∨ Q) → (¬ P ∧ ¬ Q)  := by
-  sorry
+  intro npq
+  constructor
+  . intro p
+    have pq : (P ∨ Q) := by
+      left
+      exact p
+    exact False.elim (npq pq)
+  . intro q
+    have pq : (P ∨ Q) := by
+      right
+      exact q
+    exact False.elim (npq pq)
+
 
 theorem demorgan_disj_converse :
   (¬ P ∧ ¬ Q) → ¬ (P ∨ Q)  := by
-  sorry
+  intro npnq pq
+  cases pq with
+  | inr q =>
+    have nq := npnq.right
+    exact False.elim (nq q)
+  | inl p =>
+    have np := npnq.left
+    exact False.elim (np p)
 
 theorem demorgan_conj :
   ¬ (P ∧ Q) → (¬ Q ∨ ¬ P)  := by
-  sorry
+  intro npq
+  by_cases hp : P
+  . by_cases hq : Q
+    . have pq : (P ∧ Q) := by
+        constructor
+        . exact hp
+        . exact hq
+      exact False.elim (npq pq)
+    . left
+      exact hq
+  . right
+    exact hp
 
 theorem demorgan_conj_converse :
   (¬ Q ∨ ¬ P) → ¬ (P ∧ Q)  := by
-  sorry
+  intro nqnp pq
+  cases nqnp with
+  | inr np =>
+    have p := pq.left
+    exact np p
+  | inl nq =>
+    have q := pq.right
+    exact nq q
 
 theorem demorgan_conj_law :
   ¬ (P ∧ Q) ↔ (¬ Q ∨ ¬ P)  := by
-  sorry
+  constructor
+  apply demorgan_conj
+  apply demorgan_conj_converse
 
 theorem demorgan_disj_law :
   ¬ (P ∨ Q) ↔ (¬ P ∧ ¬ Q)  := by
-  sorry
-
+  constructor
+  apply demorgan_disj
+  apply demorgan_disj_converse
 
 ------------------------------------------------
 -- Distributivity laws between ∨,∧
@@ -231,11 +271,20 @@ theorem distr_disj_conj_converse :
 
 theorem curry_prop :
   ((P ∧ Q) → R) → (P → (Q → R))  := by
-  sorry
+  intro pqr p q
+  have pq : (P ∧ Q) := by
+    constructor
+    . exact p
+    . exact q
+  exact pqr pq
 
 theorem uncurry_prop :
   (P → (Q → R)) → ((P ∧ Q) → R)  := by
-  sorry
+  intro pqr pq
+  have p := pq.left
+  have q := pq.right
+  have qr := pqr p
+  exact qr q
 
 
 ------------------------------------------------
@@ -244,7 +293,8 @@ theorem uncurry_prop :
 
 theorem impl_refl :
   P → P  := by
-  sorry
+  intro p
+  exact p
 
 
 ------------------------------------------------
