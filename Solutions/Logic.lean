@@ -93,7 +93,7 @@ theorem impl_as_contrapositive_converse :
   by_cases hq : Q
   . exact hq
   . have np := h hq
-    contradiction np hp
+    exact False.elim (np hp)
 
 theorem contrapositive_law :
   (P → Q) ↔ (¬ Q → ¬ P)  := by
@@ -107,7 +107,15 @@ theorem contrapositive_law :
 
 theorem lem_irrefutable :
   ¬ ¬ (P ∨ ¬ P)  := by
-  sorry
+  intro h
+  have demo : (P ∨ ¬ P) := by
+    right
+    intro p
+    have demo2 : (P ∨ ¬ P) := by
+      left
+      exact p
+    apply h demo2
+  exact h demo
 
 
 ------------------------------------------------
@@ -116,7 +124,13 @@ theorem lem_irrefutable :
 
 theorem peirce_law_weak :
   ((P → Q) → P) → ¬ ¬ P  := by
-  sorry
+  intro h
+  intro np
+  have demo : (P → Q) := by
+    intro p
+    exact False.elim (np p)
+  have p := h demo
+  exact np p
 
 
 ------------------------------------------------
@@ -125,7 +139,13 @@ theorem peirce_law_weak :
 
 theorem impl_linear :
   (P → Q) ∨ (Q → P)  := by
-  sorry
+  by_cases h : P
+  . right
+    intro q
+    exact h
+  . left
+    intro p
+    exact False.elim (h p)
 
 
 ------------------------------------------------
@@ -134,11 +154,25 @@ theorem impl_linear :
 
 theorem disj_as_negconj :
   P ∨ Q → ¬ (¬ P ∧ ¬ Q)  := by
-  sorry
+  intro pq npnq
+  cases pq with
+  | inl p =>
+    have np := npnq.left
+    exact False.elim (np p)
+  | inr q =>
+    have nq := npnq.right
+    exact False.elim (nq q)
 
 theorem conj_as_negdisj :
   P ∧ Q → ¬ (¬ P ∨ ¬ Q)  := by
-  sorry
+  intro pq npnq
+  cases npnq with
+  | inl np =>
+    have p := pq.left
+    exact False.elim (np p)
+  | inr nq =>
+    have q := pq.right
+    exact False.elim (nq q)
 
 
 ------------------------------------------------
